@@ -42,12 +42,15 @@ public class People implements Serializable {
     )
     private List<PeopleStats> peopleStats;
 
+    // Maintain the state of objects association
     public void addStats(Stats stats) {
 
         if (this.peopleStats == null) {
             this.peopleStats = new ArrayList<>();
         }
         
+        // Important to ensure that a new instance of PeopleStatsId is being passed into the field
+        // otherwise, PropertyAccessException will be encountered
         PeopleStats pStats = PeopleStats.builder()
         						.people(this)
         						.stats(stats)
