@@ -1,5 +1,7 @@
 package com.sample;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +15,36 @@ public class PeopleRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
-
+    
+    @Autowired
+    private StatsRepository statsRepository;
+    
     @Test
-    public void testSavePeople() {
+    public void testSavePeopleWithOneStats() {
     	
-        // People object created
+        // Creates People entity
     	People people = this.generatePeopleWithoutId();
-        people.addStats(Stats.builder().statsId(new Long(1)).statsName("a").statsDescription("b").build());
-
-        this.entityManager.persistAndFlush(people);
+    	// Retrieve existing stats from StatsRepository
+    	Stats stats = this.statsRepository.findById(new Long(1)).get();
+    	// Add Stats to People
+        people.addStats(stats);
+        // Persist and retrieve
+        People p = this.entityManager.persistFlushFind(people);
+        
+        assertThat(p.getPeopleStats().size()).isEqualTo(1);
+    }
+    
+    @Test
+    public void testSavePeopleWithAllStats() {
+    	
+    	// Creates People entity
+    	People people = this.generatePeopleWithoutId();
+    	// Retrieve all existing stats from StatsRepository and add to People
+    	this.statsRepository.findAll().forEach(stats -> people.addStats(stats));
+    	// Persist and retrieve
+    	People p = this.entityManager.persistFlushFind(people);
+        
+        assertThat(p.getPeopleStats().size()).isEqualTo(3);
     }
     
     public People generatePeopleWithoutId() {

@@ -47,9 +47,14 @@ public class People implements Serializable {
         if (this.peopleStats == null) {
             this.peopleStats = new ArrayList<>();
         }
-
-        PeopleStats pStats = PeopleStats.builder().people(this).stats(stats).build();
+        
+        PeopleStats pStats = PeopleStats.builder()
+        						.people(this)
+        						.stats(stats)
+        						.peopleStatsId(new PeopleStatsId(this.getPeopleId(), stats.getStatsId()))
+        						.build();
 
         this.peopleStats.add(pStats);
     }
+    
 }
