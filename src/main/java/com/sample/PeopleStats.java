@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -23,12 +24,14 @@ public class PeopleStats implements Serializable {
 	@EmbeddedId
     private PeopleStatsId peopleStatsId;
 
+	@MapsId("peopleId")
+	@JoinColumn(name = "people_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("peopleId")
     private People people;
 
+	@MapsId("statsId")
+    @JoinColumn(name = "stats_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("statsId")
     private Stats stats;
 
     private long value;
